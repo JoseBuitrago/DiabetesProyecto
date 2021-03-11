@@ -14,6 +14,7 @@ import csv
 import numpy
 
 from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
@@ -74,12 +75,29 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
     values_of_independent_variables = select_features_with_pca(values_of_independent_variables,
                                                                values_of_dependent_variable, number_of_features)
 
+    logging.info(str(datetime.datetime.now()) + ': SVC Started.')
+
     param_grid = {'C': [0.1, 1, 10, 100],
                   'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
                   'gamma': ['scale', 'auto'],
-                  'kernel': ['linear', 'poly', 'rbf', 'sigmoid']}
+                  'kernel': ['linear', 'poly', 'rbf', 'sigmoid'],}
 
     grid = GridSearchCV(SVC(), param_grid, refit=True)
+
+    logging.info(str(datetime.datetime.now()) + ': SVC Finished.')
+
+    logging.info(str(datetime.datetime.now()) + ': MLPClassifier Started.')
+
+    mlp = MLPClassifier(hidden_layer_sizes=(50,), max_iter=10, alpha=1e-4,
+                        solver='sgd', verbose=10, random_state=1,
+                        learning_rate_init=.1)
+
+    mlp.fit(values_of_independent_variables, values_of_dependent_variable)
+
+    print("Training set score: %f" % mlp.score(values_of_independent_variables, values_of_dependent_variable))
+    print("Training set score: %f" % mlp.score(values_of_independent_variables, values_of_dependent_variable))
+
+    logging.info(str(datetime.datetime.now()) + ': MLPClassifier Finished.')
 
     logging.info(str(datetime.datetime.now()) + ': Started the grid search.')
 
@@ -104,12 +122,14 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
     performance_of_best_classifier_10_folds = evaluate_classifier(the_best_classifier, 10,
                                                                   values_of_independent_variables,
                                                                   values_of_dependent_variable)
+
     logging.info(str(
         datetime.datetime.now()) + ': Finished the evaluation of the best classifier with cross-validation and k=10.')
 
     performance_of_best_classifier_5_folds = evaluate_classifier(the_best_classifier, 5,
                                                                  values_of_independent_variables,
                                                                  values_of_dependent_variable)
+
     logging.info(str(
         datetime.datetime.now()) + ': Finished the evaluation of the best classifier with cross-validation and k=5.')
 

@@ -93,7 +93,7 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
                         learning_rate_init=.1)
 
     mlp.fit(values_of_independent_variables, values_of_dependent_variable)
-
+    #
     print("Training set score: %f" % mlp.score(values_of_independent_variables, values_of_dependent_variable))
     print("Training set score: %f" % mlp.score(values_of_independent_variables, values_of_dependent_variable))
 

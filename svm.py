@@ -19,6 +19,9 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 
 def select_features_with_pca(data_attributes, data_labels, number_of_features):
@@ -98,6 +101,27 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
     print("Training set score: %f" % mlp.score(values_of_independent_variables, values_of_dependent_variable))
 
     logging.info(str(datetime.datetime.now()) + ': MLPClassifier Finished.')
+
+    logging.info(str(datetime.datetime.now()) + ': RandomForestClassifier Started.')
+
+    X = training_data.iloc[:,0:15].values
+    y=  training_data.iloc[:,15].values
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.fit_transform(X_test)
+
+    classifier = RandomForestClassifier(n_estimators=20, random_state=0)
+    classifier.fit(X_train, y_train)
+    y_pred = classifier.predict(X_test)
+    
+    print(confusion_matrix(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    print(accuracy_score(y_test, y_pred))
+
+    logging.info(str(datetime.datetime.now()) + ': RandomForestClassifier Started.')
 
     logging.info(str(datetime.datetime.now()) + ': Started the grid search.')
 

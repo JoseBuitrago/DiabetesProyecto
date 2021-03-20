@@ -3,7 +3,7 @@ Usage:
 python svm_comparison.py <name of input file> <name of output file> <name of log file>
 
 Usage examples:
-python svm.py preprocessed_data.csv svm_performance_metrics.csv model_selection_results.csv 11 svm.log
+python mlp.py preprocessed_data.csv svm_performance_metrics.csv model_selection_results.csv 11 svm.log
 """
 import datetime
 import logging
@@ -59,7 +59,7 @@ def evaluate_classifier(classifier, number_of_folds, values_of_independent_varia
 def main(input_data_file_name, output_performance_metrics_file_name, output_model_selection_file_name,
          number_of_features):
     input_data_file_name = 'preprocessed_data.csv'
-    output_performance_metrics_file_name = 'svm_performance_metrics.csv'
+    output_performance_metrics_file_name = 'mlp_performance_metrics.csv'
     output_model_selection_file_name = 'model_selection_results.csv'
 
     logging.info(str(datetime.datetime.now()) + ': Started.')
@@ -78,16 +78,23 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
     values_of_independent_variables = select_features_with_pca(values_of_independent_variables,
                                                                values_of_dependent_variable, number_of_features)
 
-    logging.info(str(datetime.datetime.now()) + ': SVC Started.')
+    logging.info(str(datetime.datetime.now()) + ': MLPClassifier Started.')
 
-    param_grid = {'C': [0.1, 1, 10, 100],
-                  'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
-                  'gamma': ['scale', 'auto'],
-                  'kernel': ['linear', 'poly', 'rbf', 'sigmoid'],}
+    param_grid = {'hidden_layer_sizes': [25, 50, 75, 100],
+                  'activation': ['identity', 'logistic', 'tanh', 'relu'],
+                  'solver': ['lbfgs', 'sgd', 'adam'],
+                  'max_iter': [50, 100, 150, 200],
+                  'alpha': [1e-4],
+                  'random_state': [1],
+                  'verbose': [10],
+                  'learning_rate_init': [0.001, 1]}
 
-    grid = GridSearchCV(SVC(), param_grid, refit=True)
+    grid = GridSearchCV(MLPClassifier(), param_grid, refit=True)
 
-    logging.info(str(datetime.datetime.now()) + ': SVC Finished.')
+    logging.info(str(datetime.datetime.now()) + ': MLPClassifier Finished.')
+
+    print("Training set score: %f" % grid.score(values_of_independent_variables, values_of_dependent_variable))
+    print("Training set score: %f" % grid.score(values_of_independent_variables, values_of_dependent_variable))
 
     logging.info(str(datetime.datetime.now()) + ': Started the grid search.')
 

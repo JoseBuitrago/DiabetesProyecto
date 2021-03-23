@@ -80,21 +80,20 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
 
     logging.info(str(datetime.datetime.now()) + ': MLPClassifier Started.')
 
-    param_grid = {'hidden_layer_sizes': [25, 50, 75, 100],
+    param_grid = {
+                  'hidden_layer_sizes': [25, 50, 75, 100],
                   'activation': ['identity', 'logistic', 'tanh', 'relu'],
                   'solver': ['lbfgs', 'sgd', 'adam'],
-                  'max_iter': [50, 100, 150, 200],
+                  'max_iter': [5],
                   'alpha': [1e-4],
                   'random_state': [1],
-                  'verbose': [10],
-                  'learning_rate_init': [0.001, 1]}
+                  #'verbose': [10],
+                  'learning_rate_init': [0.001, 1]
+                  }
 
     grid = GridSearchCV(MLPClassifier(), param_grid, refit=True)
 
     logging.info(str(datetime.datetime.now()) + ': MLPClassifier Finished.')
-
-    print("Training set score: %f" % grid.score(values_of_independent_variables, values_of_dependent_variable))
-    print("Training set score: %f" % grid.score(values_of_independent_variables, values_of_dependent_variable))
 
     logging.info(str(datetime.datetime.now()) + ': Started the grid search.')
 

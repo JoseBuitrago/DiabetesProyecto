@@ -3,7 +3,7 @@ Usage:
 python svm_comparison.py <name of input file> <name of output file> <name of log file>
 
 Usage examples:
-python mlp.py preprocessed_data.csv svm_performance_metrics.csv model_selection_results.csv 11 svm.log
+python mlp.py preprocessed_data.csv mlp_performance_metrics.csv model_selection_results.csv 11 svm.log
 """
 import datetime
 import logging
@@ -60,7 +60,7 @@ def main(input_data_file_name, output_performance_metrics_file_name, output_mode
          number_of_features):
     input_data_file_name = 'preprocessed_data.csv'
     output_performance_metrics_file_name = 'mlp_performance_metrics.csv'
-    output_model_selection_file_name = 'model_selection_results.csv'
+    output_model_selection_file_name = 'model_selection_results_mlp.csv'
 
     logging.info(str(datetime.datetime.now()) + ': Started.')
     training_data = pandas.read_csv(input_data_file_name)
